@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
-const jwt_secret =
-  require("../config/config").JWT_Secret || process.env.JWT_SECRET;
+const jwt_secret = process.env.JWT_SECRET;
 
 function auth(req, res, next) {
   // check for token

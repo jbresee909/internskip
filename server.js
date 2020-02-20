@@ -2,11 +2,10 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
-const config = require("./config/config");
 const port = process.env.PORT || 5000;
 const path = require("path");
 
-const mongo_URI = config.Mongo_URI || process.env.MONGO_URI;
+const mongo_URI = process.env.MONGO_URI;
 
 mongoose.connect(mongo_URI, {
   useNewUrlParser: true,
