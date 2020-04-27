@@ -1,35 +1,44 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const projectSchema = new Schema(
+const projectFileSchema = new Schema(
   {
-    title: {
+    key: {
       type: String,
       trim: true,
       required: true,
     },
-    description: {
+    location: {
       type: String,
       trim: true,
       required: true,
     },
-    organization: {
+    originalname: {
       type: String,
       trim: true,
       required: true,
     },
-    projectCategory: {
+    mimetype: {
       type: String,
       trim: true,
       required: true,
     },
-    files: [{ type: Schema.Types.ObjectId, ref: "project-files" }],
+    size: {
+      type: Number,
+      trim: true,
+      required: true,
+    },
+    encoding: {
+      type: String,
+      trim: true,
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const Project = mongoose.model("projects", projectSchema);
+const ProjectFiles = mongoose.model("project-files", projectFileSchema);
 
-module.exports = Project;
+module.exports = ProjectFiles;

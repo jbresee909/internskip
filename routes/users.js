@@ -11,8 +11,14 @@ const auth = require("../middleware/auth");
 // /api/users/
 router.get("/", (req, res) => {
   User.find()
-    .then(users => res.json(users))
-    .catch(err => res.status(400).json(err));
+    .then((users) => res.json(users))
+    .catch((err) => res.status(400).json(err));
+});
+
+router.get("/hello", (req, res) => {
+  User.find()
+    .then((users) => res.json(users))
+    .catch((err) => res.status(400).json(err));
 });
 
 // GET authentication info for user
@@ -21,7 +27,7 @@ router.get("/", (req, res) => {
 router.get("/auth/user", auth, (req, res) => {
   User.findById(req.user.id)
     .select("-password")
-    .then(user => res.json(user));
+    .then((user) => res.json(user));
 });
 
 // GET one user (for login authentication)
@@ -37,13 +43,13 @@ router.post("/auth", (req, res) => {
 
   // check to see if the user exists
   User.findOne({ username })
-    .then(user => {
+    .then((user) => {
       if (!user) {
         return res.status(400).json({ msg: "that user does not exist" });
       }
 
       // Validate password
-      bcrypt.compare(password, user.password).then(isMatch => {
+      bcrypt.compare(password, user.password).then((isMatch) => {
         if (!isMatch)
           return res.status(400).json({ msg: "invalid credentials" });
 
@@ -51,7 +57,7 @@ router.post("/auth", (req, res) => {
           { id: user.id },
           jwt_secret,
           {
-            expiresIn: 3600
+            expiresIn: 3600,
           },
           (err, token) => {
             if (err) throw err;
@@ -60,14 +66,14 @@ router.post("/auth", (req, res) => {
               token,
               user: {
                 id: user.id,
-                username: user.username
-              }
+                username: user.username,
+              },
             });
           }
         );
       });
     })
-    .catch(err => res.status(400).json(err));
+    .catch((err) => res.status(400).json(err));
 });
 
 // POST new user
@@ -83,7 +89,7 @@ router.post("/add", (req, res) => {
 
   // check to see if the user already exists
   User.findOne({ username })
-    .then(user => {
+    .then((user) => {
       if (user) {
         return res.status(400).json({ msg: "that email is already taken" });
       }
@@ -94,7 +100,7 @@ router.post("/add", (req, res) => {
         last_name,
         username,
         password,
-        phone
+        phone,
       });
 
       // Create salt and hash
@@ -104,12 +110,12 @@ router.post("/add", (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            .then(user => {
+            .then((user) => {
               jwt.sign(
                 { id: user.id },
                 jwt_secret,
                 {
-                  expiresIn: 3600
+                  expiresIn: 3600,
                 },
                 (err, token) => {
                   if (err) throw err;
@@ -118,19 +124,19 @@ router.post("/add", (req, res) => {
                     token,
                     user: {
                       id: user.id,
-                      username: user.username
-                    }
+                      username: user.username,
+                    },
                   });
                 }
               );
             })
-            .catch(err => {
+            .catch((err) => {
               res.status(400).json(err);
             });
         });
       });
     })
-    .catch(err => res.status(400).json(err));
+    .catch((err) => res.status(400).json(err));
 });
 
 // DELETE a user
@@ -141,7 +147,7 @@ router.delete("/delete/:id", (req, res) => {
     .then(() => {
       res.json("user deleted!");
     })
-    .catch(err => err.status(400).json(err));
+    .catch((err) => err.status(400).json(err));
 });
 
 // UPDATE a user
@@ -150,7 +156,7 @@ router.delete("/delete/:id", (req, res) => {
 router.patch("/update/:id", (req, res) => {
   User.updateOne({ _id: req.params.id }, { username: req.body.username })
     .then(() => res.json("user updated"))
-    .catch(err => err.status(400).json(err));
+    .catch((err) => err.status(400).json(err));
 });
 
 module.exports = router;
